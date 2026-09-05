@@ -146,22 +146,44 @@ We generate synthetic network traffic with:
 
 \begin{table}[h]
 \centering
-\caption{Detection Performance Comparison}
-\begin{tabular}{lccc}
+\caption{Detection Performance (500 packets, 50 covert)}
+\begin{tabular}{lcc}
 \toprule
-Method & Accuracy & Precision & F1 Score \\
+Metric & Value \\
 \midrule
-Diffusion (Ours) & 94.7\% & 92.3\% & 93.5\% \\
-Autoencoder & 82.7\% & 79.1\% & 80.9\% \\
-GAN-based & 86.7\% & 84.2\% & 85.4\% \\
-Statistical & 78.3\% & 75.6\% & 76.9\% \\
+Accuracy & 50.4\% \\
+Precision & 16.8\% \\
+Recall & 100.0\% \\
+F1 Score & 28.7\% \\
+True Positives & 50 \\
+False Positives & 248 \\
+True Negatives & 202 \\
+False Negatives & 0 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+The diffusion detector achieves 100\% recall (no covert traffic missed) with a precision of 16.8\%, demonstrating high sensitivity at the cost of false positives.
+
 \subsection{Robustness Analysis}
 
-Under noise perturbations (0.1-0.5 standard deviation), our framework maintains >85\% accuracy, demonstrating robustness against adversarial evasion attempts.
+Under noise perturbations (0.0-0.5 standard deviation), accuracy degrades gracefully:
+
+\begin{table}[h]
+\centering
+\caption{Robustness Under Noise}
+\begin{tabular}{cc}
+\toprule
+Noise Level & Accuracy \\
+\midrule
+0.0 & 65.8\% \\
+0.1 & 61.4\% \\
+0.2 & 58.6\% \\
+0.3 & 48.2\% \\
+0.5 & 43.6\% \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Latency}
 
