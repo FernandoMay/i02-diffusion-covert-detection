@@ -38,8 +38,7 @@ class NetworkPacket:
             self.payload_size / 1500.0,
             self.protocol / 255.0,
             self.flags / 255.0,
-            self.timestamp % 1.0,
-            1.0 if self.traffic_type == TrafficType.COVERT else 0.0
+            self.timestamp % 1.0
         ], dtype=np.float32)
 
 
@@ -234,7 +233,8 @@ class DiffusionDetector:
     """Main diffusion-based covert communication detector."""
 
     def __init__(self):
-        self.diffusion_model = SimpleDiffusionModel()
+        # The model must not receive the ground-truth traffic label.
+        self.diffusion_model = SimpleDiffusionModel(input_dim=4)
         self.threshold_detector = AdaptiveThresholdDetector()
         self.rl_detector = RLEnhancedDetector()
         self.training_losses: List[float] = []
@@ -369,6 +369,8 @@ class SimulationRunner:
 
 
 if __name__ == "__main__":
+    np.random.seed(20260909)
+    random.seed(20260909)
     print("=" * 60)
     print("Diffusion Models for Covert Communication Detection")
     print("CCIOT 2026 — Simulation Runner")

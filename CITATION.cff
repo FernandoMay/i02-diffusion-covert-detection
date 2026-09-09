@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: "Diffusion Models for Covert Communication Detection in Distributed Systems"
+message: "If you use this artifact, cite the paper and software package."
+type: software
+authors:
+  - family-names: Fuentes
+    given-names: "Fernando May"
+    orcid: "https://orcid.org/0009-0002-3953-5224"
+repository-code: "https://github.com/FernandoMay/i02-diffusion-covert-detection"
+license: MIT
+date-released: 2026-09-09

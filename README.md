@@ -3,6 +3,9 @@
 **Paper:** Diffusion Models for Covert Communication Detection in Distributed Systems
 **Venue:** CCIOT 2026 — Cloud Computing and Internet of Things
 **Authors:** Fernando May Fuentes et al.
+**ORCID:** https://orcid.org/0009-0002-3953-5224
+**Conference deadline:** September 1, 2026 (verify current CFP status)
+**Submission site:** http://cciot.org
 
 ## Overview
 
@@ -56,7 +59,7 @@ pytest tests/ -v
 
 | Method | Accuracy | Precision | F1 Score |
 |--------|----------|-----------|----------|
-| Diffusion (Ours) | 94.7% | 92.3% | 93.5% |
+| Reconstruction detector | 47.8% | 16.1% | 27.7% |
 | Autoencoder | 82.7% | 79.1% | 80.9% |
 | GAN-based | 86.7% | 84.2% | 85.4% |
 

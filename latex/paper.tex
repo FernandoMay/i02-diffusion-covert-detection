@@ -16,11 +16,12 @@
   \country{M\'{e}xico}
 }
 \email{fmayf1500@alumno.ipn.mx}
+\thanks{ORCID: \href{https://orcid.org/0009-0002-3953-5224}{0009-0002-3953-5224}.}
 
 \begin{document}
 
 \begin{abstract}
-Covert communication in distributed systems represents a critical security challenge, where adversaries hide malicious transmissions within legitimate network traffic. Traditional detection methods rely on signature-based or statistical approaches that fail to capture subtle anomalies in modern encrypted traffic. This paper proposes a novel detection framework based on conditional diffusion models that learn the distribution of normal network traffic and identify covert channels through reconstruction probability analysis. Our approach integrates a reinforcement learning loop for adaptive threshold optimization, enabling real-time detection across varying network conditions. Experimental results on simulated network traffic demonstrate 94.7\% detection accuracy with a 2.3\% false positive rate, outperforming autoencoder-based and GAN-based baselines by 12\% and 8\% respectively. The framework achieves sub-millisecond inference latency, making it suitable for deployment in high-speed 6G distributed systems.
+Covert communication detection is difficult when malicious traffic is embedded in legitimate flows. This paper presents a small, reproducible anomaly-detection artifact that trains an autoencoder-style reconstruction model on synthetic normal traffic and combines an adaptive threshold with a Q-learning threshold selector. The input excludes the ground-truth traffic label. In a single seeded 500-packet synthetic test containing 50 covert packets, the implementation obtained 47.8\% accuracy, 16.1\% precision, 100\% recall, and an F1 score of 27.7\%. The result demonstrates sensitivity but also a substantial false-positive problem; it does not justify claims of production readiness or superiority over unimplemented baselines.
 \end{abstract}
 
 \keywords{covert communication, diffusion models, network security, anomaly detection, reinforcement learning, 6G}
@@ -29,17 +30,17 @@ Covert communication in distributed systems represents a critical security chall
 
 \section{Introduction}
 
-Covert communication channels represent one of the most challenging threats in distributed systems. Unlike overt attacks that modify or disrupt traffic, covert channels隐蔽ly embed information within legitimate transmissions, making detection extremely difficult. In 6G networks with massive IoT deployments and edge computing, the attack surface for covert communication expands dramatically.
+Covert communication channels represent a challenging threat in distributed systems. Unlike overt attacks that modify or disrupt traffic, covert channels can embed information within legitimate transmissions, making detection difficult. In this work, the threat model is intentionally limited to synthetic packet-level features; encrypted payload semantics and real traces are outside the scope of the artifact.
 
 Existing detection approaches fall into two categories: signature-based methods that require known patterns, and statistical methods that analyze traffic anomalies. However, both suffer from limitations: signatures cannot detect novel covert techniques, and statistical methods struggle with the complexity of modern encrypted traffic.
 
 This paper introduces a diffusion-based detection framework that addresses these limitations through generative modeling. Our key contributions are:
 
 \begin{itemize}
-\item A conditional diffusion model for learning normal traffic distributions
-\item Reconstruction-probability-based anomaly scoring
+\item A reconstruction-based generative anomaly detector with explicit label exclusion
+\item Reconstruction-error-based anomaly scoring
 \item Reinforcement learning-enhanced adaptive thresholding
-\item Sub-millisecond inference for real-time 6G deployment
+\item A reproducible baseline for later evaluation on public traffic datasets
 \end{itemize}
 
 \section{Related Work}
@@ -93,7 +94,7 @@ Anomaly scoring is based on reconstruction error:
 \text{score}(\mathbf{x}) = \|\mathbf{x} - \hat{\mathbf{x}}\|_2^2 = \|\mathbf{x} - D_\theta(E_\theta(\mathbf{x}))\|_2^2
 \end{equation}
 
-where $E_\theta$ and $D_\theta$ are encoder and decoder networks.
+where $E_\theta$ and $D_\theta$ are the lightweight encoder and decoder used in the artifact.
 
 \subsection{Adaptive Thresholding}
 
@@ -146,18 +147,18 @@ We generate synthetic network traffic with:
 
 \begin{table}[h]
 \centering
-\caption{Detection Performance (500 packets, 50 covert)}
+\caption{Detection Performance (500 packets, 50 covert; seed 20260909)}
 \begin{tabular}{lcc}
 \toprule
 Metric & Value \\
 \midrule
-Accuracy & 50.4\% \\
-Precision & 16.8\% \\
+Accuracy & 47.8\% \\
+Precision & 16.1\% \\
 Recall & 100.0\% \\
-F1 Score & 28.7\% \\
+F1 Score & 27.7\% \\
 True Positives & 50 \\
-False Positives & 248 \\
-True Negatives & 202 \\
+False Positives & 261 \\
+True Negatives & 189 \\
 False Negatives & 0 \\
 \bottomrule
 \end{tabular}
@@ -176,18 +177,22 @@ Under noise perturbations (0.0-0.5 standard deviation), accuracy degrades gracef
 \toprule
 Noise Level & Accuracy \\
 \midrule
-0.0 & 65.8\% \\
-0.1 & 61.4\% \\
-0.2 & 58.6\% \\
-0.3 & 48.2\% \\
-0.5 & 43.6\% \\
+0.0 & 53.6\% \\
+0.1 & 43.8\% \\
+0.2 & 44.6\% \\
+0.3 & 55.4\% \\
+0.5 & 43.8\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Latency}
 
-Average inference time is 0.3ms per packet, suitable for real-time 6G edge deployment.
+The present manuscript does not claim a deployment latency: the simulator does not record a controlled per-packet latency benchmark. Such a benchmark requires a fixed hardware/software environment and is reserved for future work.
+
+\subsection{Limitations and Threats to Validity}
+
+The traffic generator is synthetic, the model is a small reconstruction network rather than a full diffusion implementation, and no AE/GAN/statistical baselines are currently implemented in the repository. The 100\% recall result is therefore conditional on a narrow synthetic threat model and must not be generalized to operational networks.
 
 \section{Conclusion}
 

@@ -39,8 +39,7 @@ class TestNetworkPacket:
             traffic_type=TrafficType.COVERT
         )
         features = packet.to_feature_vector()
-        assert len(features) == 5
-        assert features[4] == 1.0  # covert flag
+        assert len(features) == 4
 
 
 class TestTrafficGenerator:
